@@ -119,7 +119,7 @@ Eigen::Vector3f texture_fragment_shader(const fragment_shader_payload& payload)
     if (payload.texture)
     {
         // TODO: Get the texture value at the texture coordinates of the current fragment
-
+        return_color = payload.texture->getColor(payload.tex_coords.x(), payload.tex_coords.y());
     }
     Eigen::Vector3f texture_color;
     texture_color << return_color.x(), return_color.y(), return_color.z();
@@ -295,6 +295,15 @@ Eigen::Vector3f bump_fragment_shader(const fragment_shader_payload& payload)
     // Vector ln = (-dU, -dV, 1)
     // Normal n = normalize(TBN * ln)
 
+    float x = normal.x();
+    float y = normal.y();
+    float z = normal.z();
+    Eigen::Vector3f t = {x*y/std::sqrt(x*x + z*z), std::sqrt(x*x + z*z), z*y/std::sqrt(x*x + z*z)};
+    Eigen::Vector3f b = normal.cross(t);
+    Eigen::Matrix3f TBN;
+    TBN << t.x(), b.x(), normal.x(),
+            t.y(), b.y(), normal.y(),
+            t.z(), b.z(), normal.z();
 
     Eigen::Vector3f result_color = {0, 0, 0};
     result_color = normal;
