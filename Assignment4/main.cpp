@@ -3,10 +3,11 @@
 #include <opencv2/opencv.hpp>
 
 std::vector<cv::Point2f> control_points;
+int pNum = 4;
 
 void mouse_handler(int event, int x, int y, int flags, void *userdata) 
 {
-    if (event == cv::EVENT_LBUTTONDOWN && control_points.size() < 4) 
+    if (event == cv::EVENT_LBUTTONDOWN && control_points.size() < pNum) 
     {
         std::cout << "Left button of the mouse is clicked - position (" << x << ", "
         << y << ")" << '\n';
@@ -50,7 +51,7 @@ void bezier(const std::vector<cv::Point2f> &control_points, cv::Mat &window)
 {
     // TODO: Iterate through all t = 0 to t = 1 with small steps, and call de Casteljau's 
     // recursive Bezier algorithm.
-    float dt = 0.005;
+    float dt = 0.001;
     for (int i = 0; i < 1.0 / dt; i++)
     {
         cv::Point2f p = recursive_bezier(control_points, dt * i);
@@ -75,7 +76,7 @@ int main()
             cv::circle(window, point, 3, {255, 255, 255}, 3);
         }
 
-        if (control_points.size() == 4) 
+        if (control_points.size() == pNum) 
         {
             // naive_bezier(control_points, window);
             bezier(control_points, window);
